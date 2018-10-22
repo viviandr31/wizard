@@ -1,0 +1,125 @@
+{#
+    LimeSurvey
+    Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+    All rights reserved.
+    License: GNU/GPL License v2 or later, see LICENSE.php
+    LimeSurvey is free software. This version may have been modified pursuant
+    to the GNU General Public License, and as distributed it includes or
+    is derivative of works licensed under the GNU General Public License or
+    other free or open source software licenses.
+    See COPYRIGHT.php for copyright notices and details.
+
+    (¯`·._.·(¯`·._.· Submit Content  ·._.·´¯)·._.·´¯)
+
+    This page is displayed after user submits the survey.
+    It could be, visually, very different (no header, etc).
+
+    It shows the end text, assessments, print answer, and statistics.
+
+    Data are in: aSurveyInfo.aCompleted and aSurveyInfo.aAssessments.
+    To show this data, turn debug mode on and copy the following line to the end of the <body> element in this file:
+    {{ dump(aSurveyInfo.aCompleted ) }}
+
+    NOTE: This content is included inside mainrow.twig
+    NOTE: see layout_global.twig for more infos
+#}
+
+{# include the form opening tag #}
+<!-- main form -->
+{{ include('./subviews/header/start_form.twig') }}
+<div style="border:1px solid #000;font-family: Arial, Verdana, Helvetica, sans-serif;line-height:1.2;color:#000;">
+        <div style="width:100%;min-height:34px;padding:5px;background:#000;text-align: center;}">
+        {% if noJs %}
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAATCAYAAACHrr18AAAWOGlDQ1BJQ0MgUHJvZmlsZQAAeAHVWHVYVF+33mcShhlq6B5i6O7u7hZEYOjuNkBUVEBKSkIBFUQUkBJBJQwMQEJCASVEQFBRRBBU7lEff99373O//+4/dz/POefda++zTqy19trrBYCthRIREYKgByA0LCbKzliPb5+LKx92GkAACaiBMOCmeEdH6NrYWID/2L6Ow7PhNir5S9d/nPa/DzD4+EZ7AwDZwMNePtHeoTBugQ+8d0RUDACIblg+FB8TAWNkDoyZouAXhPGlX9j/D27/hb3+4P7fcxzs9OE5swBQ4SmUKH8AaNZgOV+ctz+sB48HAMMY5hMYBgAjH4y1vAMoPgCwecJzJEJDw3/hTBiLeP2bHv9/wxSK1z86KRT/f/Cfb4HvhB9sEBgdEUJJ/N35vzyFhsTC/+t3Y4TP+LAQKwv4Kggfyz4UA/O/OCLkt81+y33DHO3/ysO8rKz/Yr8oI7u/OCJG79+wjcNfeVKAvtVf7Btt+I+eIIrZL5v91h8Va+f4F0fH2Rv+xUkBDs5/sY+vwT9yv0Aj07/ywBjTf54VHG7+zzsAC2AIDAAf0AeBIAz4glBAgXsGcC8aRIAQuJcY45sA2xMA/fCIxKhA/4AYPl3YA30l+EzDvKUk+ORkZOV+Df+/ab9i78/Lbtj9jimI5dm/ZJHwt6qpwjFR/i8ZRRyADgnY/a/9SyaoBPt7KQCdC96xUXF/9KF+XdAAB+gAE2AHPEAAiABJIAeUgDrQgf+0GbAGDsAFuANvEAD/6ygQDw6BoyANZIAcUABKwAVwEVwB10ETuAlugx7wEDwFQ2AMTIFZsAhWwTr4CnYhCMJCBIgIsUO8kBAkDslBKpAWZAhZQHaQC+QJ+UNhUCx0CDoGZUB5UAlUCdVCN6BbUA/0GBqGXkBz0Ar0GdpBIBF4BBOCG0FGSCNUELoIc4QD4gDCHxGJSEIcR2QhihFViGuINkQP4iliDDGLWEVsIgGSBsmCJCElkSpIfaQ10hXph4xCHkGmIwuRVch6ZAeyDzmKnEWuIb+hMCgiig8liVJHmaAcUd6oSNQRVCaqBHUF1Ya6jxpFzaHWUT/RBDQXWhythjZF70P7o+PRaehCdDW6Ff0APYZeRH/FYDAsGGGMMsYE44IJwhzEZGLKMQ2YbswwZgGzicVi2bHiWE2sNZaCjcGmYc9hr2G7sCPYRew2FQ0VL5UclRGVK1UYVSpVIdVVqrtUI1RLVLvU9NRC1GrU1tQ+1InU2dSXqDuon1EvUu/iGHDCOE2cAy4IdxRXjKvHPcBN4zZoaGj4aVRpbGkCaVJoimkaaR7RzNF8wzPixfD6eDd8LD4LX4Pvxr/AbxAIBDJBh+BKiCFkEWoJ9wivCNu0RFopWlNaH9pk2lLaNtoR2g901HRCdLp07nRJdIV0zXTP6NboqenJ9Pr0FPoj9KX0t+gn6DcZiAyyDNYMoQyZDFcZHjMsM2IZyYyGjD6MxxkvMt5jXCAiiQJEfaI38RjxEvEBcZEJwyTMZMoUxJTBdJ1pkGmdmZFZgdmJOYG5lPkO8ywLkoXMYsoSwpLN0sQyzrLDys2qy+rLepq1nnWEdYuNk02HzZctna2BbYxth52P3ZA9mD2X/Sb7DAeKQ4zDliOe4zzHA441TiZOdU5vznTOJs6XXAguMS47roNcF7n6uTa5ebiNuSO4z3Hf417jYeHR4Qniyee5y7PCS+TV4g3kzeft4n3Hx8ynyxfCV8x3n2+dxEUyIcWSKkmDpF1+YX5H/lT+Bv4ZAZyAioCfQL5Ar8C6IK+gpeAhwTrBl0LUQipCAUJFQn1CW2RhsjP5JPkmeVmYTdhUOEm4TnhahCCiLRIpUiXyXBQjqiIaLFouOiSGEFMUCxArFXsmjhBXEg8ULxcflkBLqEqESVRJTEjiJXUl4yTrJOekWKQspFKlbkp9kBaUdpXOle6T/imjKBMic0lmSpZR1kw2VbZD9rOcmJy3XKncc3mCvJF8sny7/CcFcQVfhfMKk4pERUvFk4q9ij+UlJWilOqVVpQFlT2Vy5QnVJhUbFQyVR6polX1VJNVb6t+U1NSi1FrUvuoLqkerH5VfVlDWMNX45LGgia/JkWzUnNWi0/LU6tCa1abpE3RrtKe1xHQ8dGp1lnSFdUN0r2m+0FPRi9Kr1VvS19N/7B+twHSwNgg3WDQkNHQ0bDE8JURv5G/UZ3RurGi8UHjbhO0iblJrsmEKbept2mt6bqZstlhs/vmeHN78xLzeQsxiyiLDkuEpZnlWctpKyGrMKub1sDa1Pqs9YyNsE2kTactxtbGttT2rZ2s3SG7PnuivYf9VfuvDnoO2Q5TjiKOsY69TnRObk61TlvOBs55zrP7pPcd3vfUhcMl0KXdFevq5FrturnfcH/B/kU3Rbc0t/EDwgcSDjx253APcb/jQedB8Wj2RHs6e171/E6xplRRNr1Mvcq81r31vYu8V310fPJ9Vnw1ffN8l/w0/fL8lv01/c/6rwRoBxQGrAXqB5YEfgoyCboQtBVsHVwTvBfiHNIQShXqGXorjDEsOOx+OE94QvhwhHhEWsRspFpkQeR6lHlUdTQUfSC6PYYJ3uT0x4rEnoidi9OKK43bjneKb05gSAhL6E8USzyduJRklHT5IOqg98HeQ6RDRw/NHdY9XHkEOuJ1pDdZIPl48mKKccqVo7ijwUcHUmVS81K/HHM+1nGc+3jK8YUTxifq0mjTotImTqqfvHAKdSrw1OBp+dPnTv9M90l/kiGTUZjxPdM788kZ2TPFZ/ay/LIGs5Wyz+dgcsJyxnO1c6/kMeQl5S2ctTzbls+Xn57/pcCj4HGhQuGFIlxRbNFssUVx+znBcznnvpcElIyV6pU2lHGVnS7bKvcpHzmvc77+AveFjAs7FYEVk5XGlW1V5KrCi5iLcRffXnK61HdZ5XJtNUd1RvWPmrCa2St2V+7XKtfWXuW6ml2HqIutW7nmdm3ousH19nrJ+soGloaMRtAY2/juhueN8Sbzpt5mleb6FqGWslZia3ob1JbYtn4z4OZsu0v78C2zW70d6h2tnVKdNbdJt0vvMN/Jvou7e/zuXldS12Z3RPdaj3/PQq9H79S9ffee37e9P/jA/MGjh0YP7/Xp9nU90nx0+7Ha41tPVJ7cfKr0tK1fsb91QHGgdVBpsO2Z8rP2IdWhjmGN4bsj2iM9owajD5+bPn86ZjU2PO44PjnhNjE76TO5/CLkxaeXcS93p1Km0dPpM/Qzha+4XlW9Fn3dMKs0e2fOYK5/3n5+asF7YfVN9Jvvi8ffEt4WLvEu1S7LLd9eMVoZerf/3eJqxOruWtp7hvdlH0Q+tHzU+di/vm998VPUp73PmRvsGzVfFL70btpsvvoa+nV3K32bffvKN5VvfTvOO0u78d+x34t/iP7o+Gn+c3ovdG8vghJF+b0XQMJnhJ8fAJ9rACC4AEAcAgBH+2dv/HsGvHWGN/QIGDtBUtAqohzpjhJFY9GfMCvYCarX1HO4LTyaQKY1p4uhr2CYINIwaTEnsTSwLrGLcVA4i7ie8aB5Ffl8SVn8TQIjgh/ICGFaETpRGnjl+yb+XmJOclTqnnSrzCXZHLnD8kEKToo6SmLKROXvKouq/Wot6mUaxzSDtOy0tXQkdHn1WPTpDagNUYY/jLaM102WTWfNJs0HLR5Y3rZqtr5uc9W21u6q/XWHBscbTs3OzftaXFpcm/c3ud040ODe4NHk2U7p8er3fuHz1veL314ATSBLEH+weIhiqHaYabhjhG9kfNSZ6OqYrtjJuE8J1Il8ScoHrQ55H044kp5clFJxtDL1wrHi49kn0tIOnow85XfaNd0qQzdT8YxIFlc2Yw5NLnUezVn6fLYCUqF4kUKx5jnDEstSx7L95d7ngy/EVKRU5lRVXmy99OTy6+ovV6hqua5K1+ldc7zuX5/QcKqx8EZVU11zc0tHa1fbg5uP2wduDXeMdU7enrrz+u6brtXuzV7kPeb7Ig80Htr0eT+Kf5z+pOxpQ3/PwPDg7LP3Q5vDOyPfR3efb49tjn+aeA9728LLV1OT0yMzA68evX4w+3DuyfzIwsyblcXNJWgZv8L2TmBVak31vf4H04/m6waf5D6zfv680ffl3GbwV40t2q3X2w3fUnZsd0m7n773/Mj96bkns7f33+wvheZDb8D2f0c1T/2JBocXIhjSBtBl0/cybBAlmTyYz7E8ZyOwW3Kc4Ozm+sojzuvBl0lq4R8X+CJER+YSJouQRNnEaMS2xeclBiU7pC5KZ8rEyXrKmcrLKLAq/FB8o/REuUElXzVJzV1dT4OsSaW5qjWs3a5zUTdXL1U/3iDE0MvIydjcRMtU1kzAnNkCa7Ft+c5q2nrY5pFtr91d+06HdsdWp0bnun3VLpWuJfvz3c4cOOme6pHsmUxJ9Ur3PutT5lvj1+jfHtAd+CjoWfBYyHTom7C18O1ITBRrtESMXuy+uLD4YwlFideSug6OHHpzeDMZkYI7SpuKP4Y59vP4lxMraTMnh089ON2eXpdxPjPnTGpWfHZojn+uf17Q2aj8pIJjhRlFZ4tLz1WV1JY2lrWW3z7fe+FpxXjlm6rNS5jLbNViNRpXrGo9rkbUpVzLuV5R39Bwp/HJjbGm183LLeut22177ZhbhA6mTo7bfHfIdyW65Ls1e8x6Xe6F3E9+cPZhTV/Ho4HHs08+96MGWAbJzxSH9IYtRuxHnZ+7jrmNu094THq+8HxJmaJMU2YoryivvWcD5iLmDy2kvylZrHvbudS/PLPy/t33Nfx7jg/kj1Lr0p+EYQ/Y25j70rNZ8fXIltu22je2b193Rncbv5/5EfTTaE/gf9j/P8f/IBHHpMEcDcf/Rzj+vTlLuZ7zEHg1+IJJRfx3BeYFf5IZhEkiYqKiYsLiJAkOSXopamkgvSGzJDsp90i+TaFasUDpmHKkygFVczVldQENWo1tzQWtIe1unWbdK3oV+qUGBYZZRieNU0wSTCPM/M3dLRwsTa20rJVspG1F7cj2gg78jiQnXmeufewuLK6M+/Fu2APQgR/u3zy2PLcpu94IHypfOj8Wf64AUiA5SCxYOkQuVDFMNVw7wjjSNsojOiImJTY3rjL+RkJ34rOkmYOrh7aPIJJxKfij1KkQnEXfHH9+ojet4WT5qfTTsemUDMtMlTMCWXRZP7Lf58znTudNnp3Inyx4UThZNFk8cW685HnpaNlw+bPzAxcGK4Yrx6tm4Ey3fnmnBnWFUMt8laeOfE3qukK9WoN2o/4NgybDZoMWvVadNs2bau3Kt+Q7pDvFb5Pv8N/l6eLs5uzh6RW8J3lf+YHeQ8s+50dej0OexD1N7j81kDtY/Oz8UOVw1UjFaNnzorHc8YyJ45OHX8S/DJ8KmPaccXll/9pm1nbOed5rIfJN6mLB2ytLncsDK7PvPq+h3jN9EPwot675yeCz0YbRF/1N7a/qW0rbst/Ed8i7fN/ZfxB/EvYwv+z/hyP5lRMwcE15Cc4TjicBsMgF4Lw6AGQcTD/QAmBDAMBBFSD0sgFCXh4gZC7+kz8ggIJZJHrABkhAHCjDtbwt8ADhIBmuKatAK3gMZsAGhINIkBrkAIVD6VAN9BBaRGAQIggLuNYrhuu7NSQ70gSZhGxALqME4UrtEmoZLQXXYr0YOownphlLhfXEdlKxUSVQvaTWpq6B66QjuPc0HjTDeAP8TYIY4TwtM+0ZOiq6E/Ro+pMMeIazjNyMtURlYh+TM9MScyILDUsFqzLrEFsIO469jsOK4wtnGZcx1wZ3BY8lzw5vDZ8jCU1q4w8SIAm8FCwQsiMTyWPCJSKeosKi78WaxRMltCUxks+kSqUDZFRkaWRfy7XJ5yiEKFooySnzqBBVadXo1Vk1SJrSWtra9jpBusf1KvV7DBaMsMZiJuamgWYnzCssOi0nrbZs2G017Xztsx06HVdhX7Z2SXVt2b94gMXdyCPes44y683uY++b6zccQAzcF1QRvBaqHpYVvhRpGFUTQ4iNj3uT4JDYd1DzUNsRueTGo7KpTcflT9w4KXmqOp0no/gMMSs3hyE3/yxHflWhZFHnOcuShbLk8wIXhipPXNS9jKx+fCXvqsc1mXpkw8sbLc25rZE3bW/JdNLcnr/b2p3Wu+++xENE39TjtqcFA3HPXIf1RmXGRCbkXjhOFc/szsbNf188ucz67tp7o49vPp/clN6a3sn6YfB7/fhrf9bf9leC7W8DMwyh4DDIAhWgGeYQpsA6zBjwQMqQDRQMpUEXYSZgFgEhBBBGiGBEHqIT8RZJROohY5FXkW9QJBQFdRm1hlZAJ6MHMNyYcMx9LBc2DjsK19L5VN+oPamf4JRx1TTsNGfwSHwS/hMhkDBHu592gs6JboJ+P/08QzDDFuMJIguxlkmLaZQ5kHmPpYhVlnUAtj4texPHPk4EZz2XGzeBu4snileId5IvnaRJ+sx/RYAiyC04JVRKdhcWFF4VaRVNEbMQZxVfkKiXTJQykmaSXpRpl82S85XXUeBS2FWcUboH57NK1RK1UvUqjXrNO/B69lZnT49TX83AzfCoUa3xsMk3Mx5zbQsPy8NW5dZ3bebtqO3lHNwdzzjddd5wEXX12l/qNuqO89D1TKDc8Fr1EfH196v1fx+oEHQk+Ekoe1hweHcke1Rc9ESsRtylBLrEw0kfDlEOTybbpgykWhwbOGGTNnLK7vRwhlXmkyyT7L5c07zBfMeCV0XBxTslmWWk8s4LLhU/q+ouuVez1jyvLahzvU6qX2u81ZTe4t6m0E64tdTZdSe/y7dH4R64P/Cw7FHoE51+1oH1Z/3DdaNZY3ET/i/8p5Jmal6vzuu+qVrCrcSuLn5wXR/ZsN4c2nbaef0D3nHCy8Zf+//n+H/1O/75f8d/2O/4fwDHPxohDDM+EYgiRBfiHczpGCLjkXXIeRQ3yhXmaKbRJJiNaUR/x5hhSjEfsYbYcphRcaRqpWalPkS9gLPEddCI0BTjqWAPWCN4EJ7TWtA+pNOj66HXo3/IYMEwxkhh/Eg8wkTLVMEsx/yQxY3lC2s2mwRbP3sYB5Gjk9OXi5GrmzuCh49niPconxzfW1Ipv70ArcBTwQwhSzID+YVwlUioqKoYWmxYvFwiUFJZCiv1Qrpe5oSsu5yaPLv8jsIrxT6lVuU6lSuq9Wqd6v0ac5o72iw6irr79I7o1xiMGiGN5U28TXPMOsznLamtZK1dbU7a3rRbceBxdHbKcx5yoXe131/oNunO4bHfs4zyylvAJ8i3xR8KsAmsCtoKsQ6tC8dFhEaORevFNMUJx1ckciWVHuI6XJUsltKaqn/s+YmAtO+nctJJGY1nNLMe5zjlvj2bUIAvvFSsdW6q9GA5z/n7FeFVvBfHLxfUuNYKXd289qj+QmNik3OLchtnO+LWWufEnZ6ump60ex4PZPugR0NPKvqjBo2HeIe/jY6PtU2UvDg6FTbj9dpjzn8hcfHsUvPK5Br4IL7u+jnzS+/X3W/Ku3E/bv2yf7Sf/B8CFsLrwfTjq729DTIA2DwAfuTu7e1W7e39uAgXG9MAdIf84d1/5xp6APLIiMFxwcdnNn4J/lv7L19lQtbFhYASAAADhElEQVRIDe1T729TVRh+zrnn9sdtu7Vd2aSXpWxr1o5BSWBskzEn1BglOIwEBwomED6YgEtM8APywX038ZuJJEYTPhkTfwSJJiZE3SYuGKKZo850YxteWrrNdVvpdrm/jucu+ifIF3eS574nz3nO+56893nBOYdYhwX8wOUEcKnH5ZS+/AturB3je0M3eVqc0/jlvg0ueDPYh1ElzjW1bnEx/oyr4+eVw/xj+HQguQZ0Apys4nq/e7Z45WrX8pVPWi4CgffS6WddjrpVxXpJIALIKRGzBIRYnA4QkvPoFnotB3uSzyPoEBx3xRa1n4NkNIltI5H4EZcT7DEsIEyAjEj6VBLwENABiGQMtE9mcvs6EINlHXXVVFVVJZtpy3518WTi3bORnR1J1sO/HdpyvLWYbW6rJDpR7nh7eSxz49VL2w6F4tnBwcGa16sHe1qMcDsmB1J0cXtfaXw8YD/x5EHrQbQZr72SQULt/vVOLkI6q9k15dpWGrC6AX13847WZKqj/RCmvvGSe59f3Rm2H/3GHi69yWLqnvnZmadjjdvOc8O4pmnz58Kptjf8S7MFX0T9TK88+HB5tXwkUqd+VPpr8ks13rVslPMXSDB6TLbw9Vph8i1/c1evMfN7K2tJveOrVD+tzC2clFvjQ0ZJy5H6pl88VnXIqMynWGOs/gCcNViPVvqZTNWGkBMjxDkjeS1sj9onGNebuKlHCYEUoDK8/vBZRpRowgjvtxzJ5OteRfLK55jPS0igvh8eT8KpUcKUOqd5wAKJk9OUMpU7hicYCm6VLFC7SrvJFx+8P1zM3+kdn7xr7d19gv40OknUzn0m52EP8ZZM/9H9bGU6x3ewOWda+5mZIWr6MrpsTd23L6T3gRrD0rqWNuOaLhc1zWkwd5HV/AT4rlNWOL9FLtaWnfjLMbowPcPndZ2bs3/QHyZyJXbrz4J9/caPKBTKZOKhjdFhEwfqfbi9lEKoTkGjkiC3gzV4cWWCjizn0eQNYSmax726u+RMI4OfjEHXKJG0KRglE3RO2GtkhFjGKcq+V6F3OVRiYdhOLYr356B9dwuzqysNjFEKnywLMAHXb4BX4vAzG37JhtedNm4Ji1LuJxI8kOBzZPgFiMM29OIviPkQl6kQs384Bg6PA+F6QXLxGiERtZioQ0T8d5w2EjzOz2bhx9btzVZvtvo/68D/z1x/A9/mYeYOTOQvAAAAAElFTkSuQmCC" >
+        {% else %}
+            <b class="ques_logo"></b>
+        {% endif %}
+           
+            <span style="color: white;font-size: 1.4em;line-height:20px;">{{ processString(aSurveyInfo.name,1) }}</span>
+        </div>
+        <div style="padding:5px 3%;">
+        {# This will display the script and the hidden inputs needed for Expression Manager #}
+        {{ aSurveyInfo.EM.ScriptsAndHiddenInputs  }}
+            <div style="text-align:center;">
+                <h2 style="font-size:24px;font-weight:bold;margin-top:48px;">Report for {{ aSurveyInfo.surveyls_title }}</h2>
+                <div style="font-weight:700;margin:34px 0 18px;font-size: 15px;">{{ post.published_at|date("F d,Y h:i a", "GMT") }}</div>
+                 {% if noJs %}
+                 {% else %}
+                    <div style="margin:5px 0 20px;">
+                        <input style="width:109px;height:21px;font-size:13px;margin:0;padding:0" type="button" name="print" value="Print the Report" onclick="window.print()">
+                    </div>
+                {% endif %}
+            </div>
+        
+    <div  style="margin-top:46px;font-family: Arial, Verdana, Helvetica, sans-serif;line-height:1.2;color:#000;">{{ aSurveyInfo.report_header }}</div>
+    {# 概述Group #}
+    <h4 style="margin:19px 0"><strong>Overview based on your responses</strong></h4>
+    <table>
+    {% for report in aReport.group %}
+        <tr >
+             <td class="" style="width:200px;padding-left:0px;padding-right:0px;"><strong >{{ report.group_name }}</strong></td>
+            <td class="" style="padding: 1rem 0">
+            {% for assessment in report.assessments %}
+                {% if report.score >= assessment.min and report.score <= assessment.max and report.IDK >= assessment.idk_min and report.IDK <= assessment.idk_max %}
+                    {{ assessment.message }}
+                {% endif %}
+            {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    {# 概述total #}
+    
+    {% for assessment in aReport.total.assessments %}
+        <tr >
+        {% if aReport.total.score >= assessment.min and aReport.total.score <= assessment.max and
+                aReport.total.IDK >= assessment.idk_min and aReport.total.IDK <= assessment.idk_max %}
+                <td class="col-sm-3"><strong>{{assessment.name}}</strong></td>
+                <td class="col-sm-9" style="padding: 1rem 0">{{ assessment.message }}</td>
+        {% endif %}
+        </tr>
+    {% endfor %}
+
+    </table>
+    
+    {# 子答案 #}
+    {% for para in [
+        {'key': 'praise', 'title':'Strong Points'},
+        {'key': 'remedy', 'title': 'Areas that Need Improvement'},
+        {'key': 'moderate', 'title':'Areas that are Mixed, but still can be Improved'},
+        {'key': 'feedback', 'title':'Areas you should Investigate Further'}]
+    %}
+        {% if count(aSubReport[para.key]) %}
+            <div class="" style="margin-top:2rem">
+            <h4><strong>{{para.title}}</strong></h4>
+            <ol>
+            {% for report in aSubReport[para.key] %}
+                <li>
+                <div>[{{report.group_name}}]:<strong>{{ report.question }}</strong></div>
+                {%if report.subquestion %}<div>subquestion: {{report.subquestion}}</div>{% endif %}
+                <div>Your Answer: {{report.answer}}
+                    {% if report.tips_answer_start!="" and report.tips_answer_end!="" %}
+                    ( {{ report.tips_answer_start }}; {{ report.tips_answer_end }})
+                    {% endif %}
+                </div>
+                <div>{{ report.feedback_content }}</div>
+                </li>
+            {% endfor %}
+            </ol>
+            </div>
+        {% endif %}
+
+    {% endfor %}
+
+    <p></p>
+    <div>{{ aSurveyInfo.report_footer }} </div>
+    <br>
+        </div>
+    </div>
+</form> <!-- main form -->
+
+{#
+<div>{{dump(aReport)}}</div>
+<div style="padding-top:10px">{{dump(idk)}}<div>
+<div style="padding-top:10px">{{dump(aSubReport)}}<div>
+<div style="padding-top:10px">{{dump(sess)}}<div>
+ #}

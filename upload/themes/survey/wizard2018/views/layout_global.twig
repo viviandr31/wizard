@@ -1,0 +1,313 @@
+{#
+    LimeSurvey
+    Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+    All rights reserved.
+    License: GNU/GPL License v2 or later, see LICENSE.php
+    LimeSurvey is free software. This version may have been modified pursuant
+    to the GNU General Public License, and as distributed it includes or
+    is derivative of works licensed under the GNU General Public License or
+    other free or open source software licenses.
+    See COPYRIGHT.php for copyright notices and details.
+
+    (¯`·._.·(¯`·._.· Global Layout  ·._.·´¯)·._.·´¯)
+
+    This is the global layout that will be used to displayed most pages (less the error page)
+    If you're creating your own template, remember there is no obligation to respect the current file flow of this template.
+    This is different from the old LimeSurvey template engine, where you had to provide every one of the pstpl files.
+    Here, you must have a file called main_layout.twig (called from SurveyRuntimeHelper::run() ).
+    Other than that, you're free to organize your files and inclusions as you want.
+
+
+
+    (¯`·._.·(¯`·._.· Bootstrap ·._.·´¯)·._.·´¯)
+
+    LimeSurvey uses Bootstrap.
+    See: https://getbootstrap.com
+
+    This template is an instance of Bootswatch Theme Flatly.
+    See: https://bootswatch.com/
+
+
+
+    (¯`·._.·(¯`·._.· Twig Engine  ·._.·´¯)·._.·´¯)
+
+    The template engine uses Twig.
+    See: http://twig.sensiolabs.org/
+
+    The main variable is aSurveyInfo. It's an array containing the main information about the survey.
+    aSurveyInfo also contains other needed arrays, such as aNavigator, or aQuestionGroups (which contain aQuestions), etc.
+
+    If you want to see what is availabe in aSurveyInfo, turn debug mode on in application/config.php, and copy the following line to the end of the <body> element below:
+    {{ dump(aSurveyInfo) }}
+
+    To echo a variable, just insert                      : {{ variable }}
+    To translate a string, just insert                   : {{gT( string )}}
+
+    NOTE: aSurveyInfo should be cleaned to remove the unnecessary data.
+
+
+    (¯`·._.·(¯`·._.· Twig Engine: advanced  ·._.·´¯)·._.·´¯)
+
+    For security reason, Twig is in a sandBox.
+    About sandBox, see: http://twig.sensiolabs.org/doc/2.x/api.html#sandbox-extension
+
+    Available functions/Object Methods are defined in internal.php: components => twigRenderer
+    Eg:
+         Functions : 'include', 'dump', 'flatEllipsizeText', 'getLanguageData', 'array_flip', 'array_intersect_key', 'registerPublicCssFile', 'getAllQuestionClasses', 'getShowqnumcode', 'intval'
+
+         Methods   :
+                    - CHtml::textfield() (and: form, link, emailField, beginForm, endForm, dropDownList,htmlButton)
+                    - Survey::getAllLanguages()
+                    - LSHttpRequest::getParam()
+
+    If you need to add simple functions or static methods, just add them to internal.php.
+    If you need to add complex process, use application/core/LS_Twig_Extension.php (more help/comments there)
+
+
+    NOTE: Feel free to ask for functions, variables, etc, that you feel are missing - https://bugs.limesurvey.org/my_view_page.php
+#}
+
+<!DOCTYPE html>
+<html lang="{{ aSurveyInfo.languagecode }}" dir="{{ aSurveyInfo.dir }}" class="{{ aSurveyInfo.languagecode }} dir-{{ aSurveyInfo.dir }} {{ aSurveyInfo.class.html }}" {{ aSurveyInfo.attr.html }}>
+    
+    {% block head %}    
+    {# Headers, metadata, etc #}
+    {{ include('./subviews/header/head.twig') }}
+    {% endblock %}
+    {# 禁止移动端响应式 #}
+    <meta name="viewport" content="user-scalable=yes">
+    {# body标签里的class删掉了 font-{{  aSurveyInfo.options.font }} #}
+    <body class=" {{ aSurveyInfo.class.body }}  lang-{{aSurveyInfo.languagecode}} {{aSurveyInfo.surveyformat}} {% if( aSurveyInfo.options.brandlogo == "on") %}brand-logo{%endif%}" {{ aSurveyInfo.attr.body }} >
+     {# 右边的问题导航栏    #}
+        {% if (aSurveyInfo.aQuestionIndex.bShow == true) %}
+        <div style="border:1px solid #000;position:absolute;right:0;top:32px;width:330px;overflow-y: scroll;overflow-x: hidden;height: 100%;margin-bottom:20px;">
+            <div class="" style="border-right:none;width:100%;height:100%;">
+            <div  style="width:100%;height:34px;line-height:34px;color:#fff;background:#000;text-align:center;font-size:16px;overflow:hidden">Question Index</div>
+            <div style="overflow:hidden;width:100%;font-size:13px;height:15px;line-height:15px;text-align:center;color:#fff;margin:5px 0;padding:0 3px;background:gray;font-size:13px;overflow: hidden;text-overflow: ellipsis;
+                        white-space: nowrap;">Unanswered Questions are highlighted</div>
+            {# Question index in group by group mode #}
+
+            {% if (aSurveyInfo.aQuestionIndex.bShow == true) %}
+                {% if aSurveyInfo.format == 'G' %}
+                    <!-- Question index, group, {{ aSurveyInfo.aQuestionIndex.type }} -->
+                    {# <li class="{{ aSurveyInfo.class.indexmenugli }} dropdown index-menu-{{ aSurveyInfo.aQuestionIndex.type }}" {{ aSurveyInfo.attr.indexmenugli }} > #}
+                        {# <a class="{{ aSurveyInfo.class.indexmenuglia }} dropdown-toggle" {{ aSurveyInfo.attr.indexmenuglia }} href="#" >
+                            {{ gT("Question index") }}
+                            <span class="{{ aSurveyInfo.class.indexmenugspan }} caret" {{ aSurveyInfo.attr.indexmenugspan }}></span>
+                        </a> #}
+
+                        <ul style="padding:0;margin:0;" class="" {{ aSurveyInfo.attr.indexmenusgul }}>
+                            {# TODO: move back this logic to SurveyRuntime, and provide a ready to use indexItem.statusClass #}
+                            {% set i =0 %}                            
+                            {% for step, indexItem in aSurveyInfo.aQuestionIndex.items %}
+                                {% set i = i+1 %}
+                                {% set statusClass = ''  %}
+                                {% set mybackground = ''  %}
+                                {% set mycolor = ''  %}
+                                {% if attribute(indexItem.stepStatus, 'index-item-unanswered') is defined and attribute(indexItem.stepStatus, 'index-item-unanswered') == true  %}
+                                    {% set statusClass = statusClass ~ ' bg-warning'  %}
+                                    {% set mybackground = 'background-color:gray;'  %}
+                                    {% set mycolor = 'color:#fff;'  %}
+                                {% endif %}
+
+                                {% if attribute(indexItem.stepStatus, 'index-item-error') is defined and attribute(indexItem.stepStatus, 'index-item-error') == true   %}
+                                    {% set statusClass = statusClass ~ ' bg-danger'  %}
+                                    {% set mybackground = ' '  %}
+                                    {% set mycolor = 'color:#000;'  %}
+                                {% endif %}
+
+                                {% if attribute(indexItem.stepStatus, 'index-item-current') is defined and attribute(indexItem.stepStatus, 'index-item-current') == true %}
+                                    {% set statusClass = statusClass ~  ' disabled'  %}
+                                    {% set mybackground = 'background-color:black;  '  %}
+                                    {% set mycolor = 'color:#fff;'  %}
+                                {% endif %}
+
+
+                                <li style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;list-style:none;padding:0px 25px;margin:3px 0;{{mybackground}}" class="{{ indexItem.coreClass }} {{ statusClass }}"  {{ aSurveyInfo.attr.indexmenusgli }}>
+                                   
+                                    <a style="color:#000;{{mycolor}}" href='{{ indexItem.url }}' data-limesurvey-submit='{{ indexItem.submit }}' class='aminate'>
+
+                                         {# {{ step  }}. {{indexItem.text}} #}
+                                        {# {% set menu = indexItem.code %} #}
+                                        {{i}}.{{indexItem.text}}
+                                        {# {% for x in menu|split("_") %}
+                                            {{ x | title}}
+                                        {% endfor %} #}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {# </li> #}
+                {% endif %}
+
+                {# Question index in question by question mode #}
+                {% if aSurveyInfo.format == 'S' %}
+                    <!-- Question index, question by question, {{ aSurveyInfo.aQuestionIndex.type }} -->
+                    {# <li class="{{ aSurveyInfo.class.indexmenusli }} dropdown index-menu-{{ aSurveyInfo.aQuestionIndex.type }}" {{ aSurveyInfo.attr.indexmenusli }}>
+                        <a class="{{ aSurveyInfo.class.indexmenuslia }} dropdown-toggle animate" {{ aSurveyInfo.attr.indexmenuslia }}>
+                            {{ gT("Question index") }}
+                            <span class="{{ aSurveyInfo.class.indexmenusspan }} caret" {{ aSurveyInfo.attr.indexmenusspan }}></span>
+                        </a> #}
+                        <!-- TODO: Remove this when support is added -->
+                        <ul style="padding:0;" {{ aSurveyInfo.attr.indexmenusddul }}>
+                        {% set i =0 %}
+                        {% for group in aSurveyInfo.aQuestionIndex.items %}
+
+                            {# TODO: move back this logic to SurveyRuntime, and provide a ready to use indexItem.statusClass #}
+                            {# <li> #}
+                                <div  style="padding: 0 5px;font-weight: bold;font-size: 13px;height:15px;line-height: 15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="{{ aSurveyInfo.class.indexmenusddh }}" {{ aSurveyInfo.attr.indexmenusddh }}>
+                                    {# {{ flatEllipsizeText(group.text, true, 30, " &hellip; ", 0.6 ) }} #}
+                                    {{group.text}}
+                                    {# <span class="{{ aSurveyInfo.class.indexmenusddspan }} caret" {{ aSurveyInfo.class.indexmenusddspan }}></span> #}
+                                </div>
+
+                                <ul style="padding:2px;font-size:13px;padding:0;margin:0;" {{ aSurveyInfo.attr.indexmenusddul }}>
+
+                                    {% for  key, indexItem in group.questions %}
+                                        {% set i = i+1 %}
+                                        {% set statusClass = ''  %}
+                                        {% set mybackground = ''  %}
+                                        {% set mycolor = ''  %}
+                                        {% if attribute(indexItem.stepStatus, 'index-item-unanswered') is defined and attribute(indexItem.stepStatus, 'index-item-unanswered') == true  %}
+                                            {% set statusClass = statusClass ~ ' bg-warning '  %}
+                                            {% set mybackground = 'background-color:gray;'  %}
+                                            {% set mycolor = 'color:#fff;'  %}
+                                        {% endif %}
+                                        {% if attribute(indexItem.stepStatus, 'index-item-error') is defined and attribute(indexItem.stepStatus, 'index-item-error') == true   %}
+                                            {% set statusClass = statusClass ~ ' bg-danger'  %}
+                                            {% set mybackground = ' '  %}
+                                            {% set mycolor = 'color:#000;'  %}
+                                        {% endif %}
+                                        {% if attribute(indexItem.stepStatus, 'index-item-current') is defined and attribute(indexItem.stepStatus, 'index-item-current') == true %}
+                                            {% set statusClass = statusClass ~  ' disabled '  %}
+                                            {% set mybackground = 'background-color:black;  '  %}
+                                            {% set mycolor = 'color:#fff;'  %}
+                                        {% endif %}
+
+                                            <li style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;list-style:none;padding:0px 25px;margin:1px 0;height:15px;line-height:15px;font-size:13px;{{mybackground}}" class="{{ indexItem.coreClass }} {{statusClass}}" >
+                                                    <a style="color:#000;{{mycolor}}" href='{{ indexItem.url }}' data-limesurvey-submit='{{ indexItem.submit }}' class='animate'>
+
+                                                       {# {{ flatEllipsizeText(indexItem.text, true, 30, " &hellip; ", 0.6 ) }} #}
+                                                        {% set menu = indexItem.code %}
+                                                        {{i}}.
+                                                         {% for x in menu|split("_") %}
+                                                              {{ x | title}}
+                                                         {% endfor %}
+                                                    </a>
+                                            </li>
+
+                                    {% endfor %}
+                                </ul>
+                            {# </li> #}
+                        {% endfor %}
+                        {% if aSurveyInfo.aQuestionIndex.type == 'full' %}
+                            <li>
+                                {{ gT("Question by question mode not yet supported.") }}
+                            </li>
+                        {% endif %}
+                        </ul>
+                    {# </li> #}
+                {% endif %}
+            {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    {# ==导航栏结束== #}
+    {% if (aSurveyInfo.aQuestionIndex.bShow == true) %}
+        <div style="padding-left:5%;padding-right:calc(3% + 330px);">
+    {% else %}
+        <div style="padding-left:5%;padding-right:5%">
+    {% endif %}
+
+        
+            {% if (aSurveyInfo.options.ajaxmode == "on" and aSurveyInfo.printPdf != 1) %}
+                {% block ajaxindicator %}
+                {# In vanilla, this file is empty, we keep it to have a common layout between all core themes #}
+                {{ include('./subviews/navigation/ajax_indicator.twig') }}
+                {% endblock %}
+                
+            {% endif %}
+
+            {# This used for the pjax system #}
+            {% block pjaxbegin %}
+                {% if noJs %}
+                    <div id="beginScripts" class="script-container" style="display:none">
+                    <###begin###>
+                </div>    
+                {% else %}
+                    <div id="beginScripts" class="script-container">
+                    <###begin###>
+                </div>
+                {% endif %}
+            {% endblock %}       
+
+        {# Ajaxify cannot handle an element that is a direct child of body, so => create simple wrapper section #}
+        <article>
+
+            <div id="{{ aSurveyInfo.id.dynamicreload }}">
+            {% block body %}
+
+                {# Bootstrap Navigation Bar: the top menu #}
+                {#{% block nav_bar %}#}
+                {#    {{ include('./subviews/header/nav_bar.twig') }}#}
+                {#{% endblock %}#}
+
+                {# Top Container: in this template, it contains only  #}
+                {#{% block progress %}#}
+                {#    {{ include('./subviews/header/progress_bar.twig') }}#}
+                {#{% endblock %}#}
+
+                <!-- Outer Frame Container -->
+                {% block content %}
+                    {#
+                        Content depends on the action (survey, questions, register, assesments, submit, etc)
+                        Action are in ./subviews/content/
+                    #}
+                    {% set sViewContent =  './subviews/content/' ~ aSurveyInfo.include_content ~ '.twig' %}
+                    {% include './subviews/content/outerframe.twig' with {'include_content': sViewContent } %}
+                {% endblock %}
+
+                {# Bootstrap alert modal #}
+                {% if noJs %}
+
+                {% else %}
+                    {{ include('./subviews/messages/bootstrap_alert_modal.twig') }}
+                {% endif %}
+                
+
+                {# Basic ThemeScript options  #}
+                {{ registerScript("BasicThemeScripts", "
+                if(window.basicThemeScripts === undefined){ 
+                    window.basicThemeScripts = new ThemeScripts(); 
+                } 
+                basicThemeScripts.initGlobal(); 
+                ", POS_END) }}
+
+            {% endblock %}
+            </div>
+
+        </article>
+
+        {% block pjaxend %}
+
+            {% if noJs %}
+                <div id="bottomScripts" class="script-container" style="display:none;">
+                    <###end###>
+                </div>    
+            {% else %}
+                <div id="bottomScripts" class="script-container" >
+                    <###end###>
+                </div>
+            {% endif %}
+            
+        {% endblock %}   
+
+        {% block themescripts %}
+            <script>
+                window.basicThemeScripts.init();
+            </script>
+        {% endblock %}
+        
+    </body>
+    
+</html>

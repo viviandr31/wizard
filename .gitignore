@@ -1,0 +1,5 @@
+.gradle
+/tmp
+/application/config/config.php
+/.vscode
+/reports/reports-*

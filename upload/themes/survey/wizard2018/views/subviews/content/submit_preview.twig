@@ -1,0 +1,122 @@
+{#
+    LimeSurvey
+    Copyright (C) 2007-2017 The LimeSurvey Project Team / Louis Gac
+    All rights reserved.
+    License: GNU/GPL License v2 or later, see LICENSE.php
+    LimeSurvey is free software. This version may have been modified pursuant
+    to the GNU General Public License, and as distributed it includes or
+    is derivative of works licensed under the GNU General Public License or
+    other free or open source software licenses.
+    See COPYRIGHT.php for copyright notices and details.
+
+    (¯`·._.·(¯`·._.· Submit Preview Content  ·._.·´¯)·._.·´¯)
+
+    TODO: this file should be merged with layout_submit,
+    adding the warning message "Your survey responses have not been recorded. This survey is not yet active." to  aSurveyInfo.errorHtml.messages
+
+    NOTE: This content is included inside mainrow.twig
+    NOTE: see layout_global.twig for more infos
+#}
+
+
+
+{# include the form opening tag #}
+<!-- main form -->
+{{ include('./subviews/header/start_form.twig') }}
+
+<div style="border:1px solid #000; font-size: 16px;font-family: Arial, Verdana, Helvetica, sans-serif;line-height:1.2;color:#000;">
+    <div style="width:100%;min-height:34px;padding:5px;background:#000;text-align: center;}">
+        <b class="ques_logo"></b>
+        <span style="color: white;font-size: 1.4em;line-height:20px;">{{ processString(aSurveyInfo.name,1) }}</span>
+    </div>
+    <div style="padding:5px 3%;">
+
+        <div style="text-align:center;">
+            <h2 style="font-size:24px;font-weight:bold;margin-top:48px;">Report for {{ aSurveyInfo.surveyls_title }}</h2>
+            <div style="font-weight:700;margin:34px 0 18px;font-size: 15px;">{{ post.published_at|date("F d,Y h:i a", "GMT") }}</div>
+            <div style="margin:5px 0 20px;">
+                <input style="width:109px;height:21px;font-size:13px;margin:0;padding:0" type="button" name="print" value="Print the Report" onclick="window.print()">
+            </div>
+        </div>
+
+    <div style="margin-top:46px;font-family: Arial, Verdana, Helvetica, sans-serif;line-height:1.2;color:#000;">{{ aSurveyInfo.report_header }}</div>
+    {# 概述Group #}
+    <h4 style="margin:19px 0"><strong>Overview based on your responses</strong></h4>
+    <table>
+    {% for report in aReport.group %}
+        <tr >
+            <td class="" style="width:200px;padding-left:0px;padding-right:0px;"><strong >{{ report.group_name }}</strong></td>
+            <td class="" style="padding: 1rem 0">
+            {% for assessment in report.assessments %}
+                {% if report.score >= assessment.min and report.score <= assessment.max and report.IDK >= assessment.idk_min and report.IDK <= assessment.idk_max %}
+                    {{ assessment.message }}
+                {% endif %}
+            {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    {# 概述total #}
+    
+    {% for assessment in aReport.total.assessments %}
+        <tr >
+        {% if aReport.total.score >= assessment.min and aReport.total.score <= assessment.max and
+                aReport.total.IDK >= assessment.idk_min and aReport.total.IDK <= assessment.idk_max %}
+                <td class="col-sm-3"><strong>{{assessment.name}}</strong></td>
+                <td class="col-sm-9" style="padding: 1rem 0">{{ assessment.message }}</td>
+        {% endif %}
+        </tr>
+    {% endfor %}
+
+    </table>
+    
+    {# 子答案 #}
+    {% for para in [
+        {'key': 'praise', 'title':'Strong Points'},
+        {'key': 'remedy', 'title': 'Areas that Need Improvement'},
+        {'key': 'moderate', 'title':'Areas that are Mixed, but still can be Improved'},
+        {'key': 'feedback', 'title':'Areas you should Investigate Further'}]
+    %}
+        {% if count(aSubReport[para.key]) %}
+            <div class="" style="margin-top:2rem">
+            <h4><strong>{{para.title}}</strong></h4>
+            <ol>
+            {% for report in aSubReport[para.key] %}
+                <li>
+                <div>[{{report.group_name}}]:<strong>{{ report.question }}</strong></div>
+                {%if report.subquestion %}<div>subquestion: {{report.subquestion}}</div>{% endif %}
+                <div>Your Answer: {{report.answer}}
+                    {% if report.tips_answer_start!="" and report.tips_answer_end!="" %}
+                    ( {{ report.tips_answer_start }}; {{ report.tips_answer_end }})
+                    {% endif %}
+                </div>
+                <div>{{ report.feedback_content }}</div>
+                </li>
+            {% endfor %}
+            </ol>
+            </div>
+        {% endif %}
+
+    {% endfor %}
+
+    <p></p>
+    <div>{{ aSurveyInfo.report_footer }} </div>
+
+    <div class="{{ aSurveyInfo.class.previewsubmit }}" {{ aSurveyInfo.attr.previewsubmit }}>
+        <div class='{{ aSurveyInfo.class.previewsubmittext }}' {{ aSurveyInfo.attr.previewsubmittext }}>
+            <br />
+            <br />
+            {# TODO: rewrite this before master #}
+            <strong >
+                <font size='2' color='red'>
+                    {{ gT("Did Not Save") }}
+                </font>
+            </strong>
+            <br /> 
+            <br />
+            {{ gT("Your survey responses have not been recorded. This survey is not yet active.2") }}
+            <br /><br />
+        </div>
+    </div>
+    </div>
+</div>
+</form> <!-- main form -->
