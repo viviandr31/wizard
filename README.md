@@ -1,19 +1,14 @@
-![LimeSurvey Logo](https://www.limesurvey.org/images/logos/logo_main.png)
-# Sophisticated online survey software
-[![Build Status](https://travis-ci.org/LimeSurvey/LimeSurvey.svg?branch=master)](https://travis-ci.org/LimeSurvey/LimeSurvey/)
+Installation of Wizard is pretty similar to installing the LimeSurvey. Upload the files to your web server, open config.php, enter your database information(databaselocation, databasename, databaseuser, databasepass), set the relevant directory permissions and then import the wizard database to your MySQL. Run the installer located at http://yourdomain.com/admin/install_1/index.php to populate your database. That’s it. If you run into problems, simple read the installation instructions.
 
+The database name is wizard2018. The database file is called wizard2018.sql
+Account:
+user: admin
+password: admin
 
 ## About
 Limesurvey is the number one open-source survey software.
 
 Advanced features like branching and multiple question types make it a valuable partner for survey-creation.
-
-### Demo
-
-See our [Administration Demo](http://demo.limesurvey.org/index.php?r=admin/authentication/sa/login).
-The credentials are prefilled, just click **Log in**
-
-Or try taking one of our [test surveys](https://survey.limesurvey.org/index.php?sid=78184&lang=en)
 
 
 ## How to install
