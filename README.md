@@ -15,6 +15,9 @@ Advanced features like branching and multiple question types make it a valuable 
 Installation of Wizard is pretty similar to installing the LimeSurvey. Upload the files to your web server, open config.php, enter your database information(databaselocation, databasename, databaseuser, databasepass), set the relevant directory permissions and then import the wizard database to your MySQL. Run the installer located at http://yourdomain.com/admin/install_1/index.php to populate your database. That’s it. If you run into problems, simple read the installation instructions.
 
 The database name is wizard2018. The database file is called wizard2018.sql
+
+The password to login the admin page of the Wizard(LimeSurvey) is as below, please change it to your preference after the install
+
 Account:
 user: admin
 password: admin
